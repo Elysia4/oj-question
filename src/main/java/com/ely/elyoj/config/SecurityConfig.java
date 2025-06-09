@@ -39,8 +39,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 允许所有OPTIONS请求
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // 登录接口允许匿名访问
-                        .requestMatchers("/user/login").permitAll()
+                        // 登录、注册和用户名/邮箱检查接口允许匿名访问
+                        .requestMatchers("/user/login", "/user/register", "/user/check-username", "/user/check-email").permitAll()
                         // 其他所有请求需要认证
                         .anyRequest().authenticated()
                 )

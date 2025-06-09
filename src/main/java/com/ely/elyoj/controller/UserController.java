@@ -3,10 +3,12 @@ package com.ely.elyoj.controller;
 import com.ely.elyoj.common.BaseResponse;
 import com.ely.elyoj.common.ResultUtils;
 import com.ely.elyoj.model.dto.user.UserLoginRequest;
+import com.ely.elyoj.model.dto.user.UserRegisterRequest;
 import com.ely.elyoj.model.vo.LoginUserVO;
 import com.ely.elyoj.service.UserService;
 import com.ely.elyoj.utils.UserHolder;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,17 @@ public class UserController {
 
     private final UserService userService;
     private final UserHolder userHolder;
+    
+    /**
+     * 用户注册
+     * @param userRegisterRequest 用户注册请求
+     * @return 用户id
+     */
+    @PostMapping("/register")
+    public BaseResponse<Long> userRegister(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        long userId = userService.userRegister(userRegisterRequest);
+        return ResultUtils.success(userId);
+    }
 
     /**
      * 用户登录
@@ -60,5 +73,27 @@ public class UserController {
         }
         userService.userLogout(token);
         return ResultUtils.success(true);
+    }
+    
+    /**
+     * 检查用户名是否可用
+     * @param username 用户名
+     * @return 是否可用
+     */
+    @GetMapping("/check-username")
+    public BaseResponse<Boolean> checkUsername(@RequestParam String username) {
+        boolean available = userService.isUsernameAvailable(username);
+        return ResultUtils.success(available);
+    }
+    
+    /**
+     * 检查邮箱是否可用
+     * @param email 邮箱
+     * @return 是否可用
+     */
+    @GetMapping("/check-email")
+    public BaseResponse<Boolean> checkEmail(@RequestParam String email) {
+        boolean available = userService.isEmailAvailable(email);
+        return ResultUtils.success(available);
     }
 } 

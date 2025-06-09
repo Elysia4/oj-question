@@ -64,13 +64,47 @@ service.interceptors.response.use(
           headers: error.config.headers
         }
       })
+      
+      // 处理特定的错误状态码
+      const { status } = error.response
+      
+      if (status === 401) {
+        // 未登录或token过期
+        localStorage.removeItem('token')
+        localStorage.removeItem('userRole')
+        
+        // 如果不是登录页面，则跳转到登录页
+        if (router.currentRoute.value.path !== '/login') {
+          ElMessage.error('登录状态已过期，请重新登录')
+          router.push('/login')
+        }
+      } else if (status === 403) {
+        // 权限不足
+        ElMessage.error('权限不足，无法访问')
+      } else if (status === 400) {
+        // 请求参数错误，通常是表单验证错误
+        // 不在这里显示消息，让具体的业务代码处理
+        return Promise.reject(error)
+      } else if (status === 500) {
+        // 服务器错误
+        ElMessage.error('服务器错误，请稍后重试')
+      } else {
+        // 其他错误
+        const message = (error.response.data && error.response.data.message) || error.message || '请求失败'
+        // 对于注册页面，我们让具体的业务代码处理错误消息
+        if (error.config.url.includes('/register')) {
+          return Promise.reject(error)
+        }
+        ElMessage.error(message)
+      }
+    } else if (error.request) {
+      // 请求发出但没有收到响应
+      ElMessage.error('服务器无响应，请检查网络连接')
+    } else {
+      // 请求设置有问题
+      ElMessage.error('请求配置错误: ' + error.message)
     }
     
-    ElMessage({
-      message: (error.response && error.response.data && error.response.data.message) || error.message || '网络错误',
-      type: 'error',
-      duration: 5 * 1000
-    })
     return Promise.reject(error)
   }
 )

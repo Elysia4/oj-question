@@ -2,6 +2,7 @@ package com.ely.elyoj.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ely.elyoj.model.dto.user.UserLoginRequest;
+import com.ely.elyoj.model.dto.user.UserRegisterRequest;
 import com.ely.elyoj.model.entity.User;
 import com.ely.elyoj.model.vo.LoginUserVO;
 
@@ -9,6 +10,13 @@ import com.ely.elyoj.model.vo.LoginUserVO;
  * 用户服务接口
  */
 public interface UserService extends IService<User> {
+
+    /**
+     * 用户注册
+     * @param userRegisterRequest 用户注册请求
+     * @return 用户id
+     */
+    long userRegister(UserRegisterRequest userRegisterRequest);
 
     /**
      * 用户登录
@@ -29,4 +37,18 @@ public interface UserService extends IService<User> {
      * @param token 用户token
      */
     void userLogout(String token);
+    
+    /**
+     * 检查用户名是否可用
+     * @param username 用户名
+     * @return 是否可用
+     */
+    boolean isUsernameAvailable(String username);
+    
+    /**
+     * 检查邮箱是否可用
+     * @param email 邮箱
+     * @return 是否可用
+     */
+    boolean isEmailAvailable(String email);
 } 
