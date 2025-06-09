@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ApifoxUploaderProjectSetting">
-    <option name="accountTypeButton" value="true" />
     <option name="apiAccessToken" value="APS-GGCkWCQE2JszyQyKeWNPrK4eq13lSc0v" />
     <option name="apiProjectIds">
       <array>
